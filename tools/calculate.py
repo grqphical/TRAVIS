@@ -5,6 +5,25 @@ import json
 
 
 class CalculateTool(BaseTool):
+    def tool_schema():
+        return {
+            "type": "function",
+            "function": {
+                "name": "CalculateTool",
+                "description": "Evaluate a mathematical expression",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "expression": {
+                            "type": "string",
+                            "description": "The mathematical expression to evaluate",
+                        }
+                    },
+                    "required": ["expression"],
+                },
+            },
+        }
+
     def run_tool(**kwargs) -> dict[str]:
         """Evaluate a mathematical expression"""
         try:

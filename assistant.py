@@ -27,28 +27,15 @@ messages = [
     },
 ]
 
+tools = []
+
+for tool in BaseTool.plugins.values():
+    tools.append(tool.tool_schema())
+
 response = client.chat.completions.create(
     messages=messages,
     model=MODEL,
-    tools=[
-        {
-            "type": "function",
-            "function": {
-                "name": "CalculateTool",
-                "description": "Evaluate a mathematical expression",
-                "parameters": {
-                    "type": "object",
-                    "properties": {
-                        "expression": {
-                            "type": "string",
-                            "description": "The mathematical expression to evaluate",
-                        }
-                    },
-                    "required": ["expression"],
-                },
-            },
-        }
-    ],
+    tools=tools,
     tool_choice="auto",
     max_tokens=4096,
     stream=False,

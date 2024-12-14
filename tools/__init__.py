@@ -1,5 +1,6 @@
 import os
 import traceback
+import typing
 from importlib import util
 
 
@@ -12,7 +13,11 @@ class BaseTool:
         super().__init_subclass__(**kwargs)
         cls.plugins[cls.__name__] = cls
 
-    def run_tool(**kwargs) -> dict[str]:
+    def tool_schema() -> typing.Dict:
+        """Returns the schema used in the API request for this tool. Read the docs for more information."""
+        pass
+
+    def run_tool(**kwargs) -> typing.Dict[str, str]:
         """Runs the tool and returns a JSON object with the result or an error. This function must return a dict with either a 'result' or 'error' field"""
         pass
 

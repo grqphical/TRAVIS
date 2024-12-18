@@ -5,6 +5,37 @@ import requests
 import json
 import urllib.parse
 
+weather_codes = {
+    0: "Clear sky",
+    1: "Mostly clear",
+    2: "Partly cloudy",
+    3: "Overcast",
+    45: "Foggy",
+    48: "Freezing fog",
+    51: "Light drizzle",
+    53: "Moderate drizzle",
+    55: "Heavy drizzle",
+    56: "Light freezing drizzle",
+    57: "Heavy freezing drizzle",
+    61: "Light rain",
+    63: "Moderate rain",
+    65: "Heavy rain",
+    66: "Light freezing rain",
+    67: "Heavy freezing rain",
+    71: "Light snow",
+    73: "Moderate snow",
+    75: "Heavy snow",
+    77: "Snow grains",
+    80: "Light rain showers",
+    81: "Moderate rain showers",
+    82: "Heavy rain showers",
+    85: "Light snow showers",
+    86: "Heavy snow showers",
+    95: "Thunderstorm",
+    96: "Thunderstorm with hail",
+    99: "Thunderstorm with heavy hail",
+}
+
 
 class WeatherTool(BaseTool):
     def tool_schema():
@@ -51,7 +82,12 @@ class WeatherTool(BaseTool):
         currentData = weather_response.json()["current"]
         units = weather_response.json()["current_units"]
 
+        currentData["weather_conditions"] = weather_codes[currentData["weather_code"]]
+        currentData.pop("weather_code")
+
         for key, value in currentData.items():
+            if key == "weather_conditions":
+                continue
             currentData[key] = f"{value}{units[key]}"
 
         print(currentData)

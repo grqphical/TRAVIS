@@ -50,7 +50,7 @@ class WeatherTool(BaseTool):
                         "city": {
                             "type": "string",
                             "description": "The city to get the weather from",
-                        }
+                        },
                     },
                     "required": ["city"],
                 },
@@ -89,7 +89,5 @@ class WeatherTool(BaseTool):
             if key == "weather_conditions":
                 continue
             currentData[key] = f"{value}{units[key]}"
-
-        print(currentData)
 
         return json.dumps({"result": json.dumps(currentData)})

@@ -11,13 +11,18 @@ class NHLGamesTool(BaseTool):
             "type": "function",
             "function": {
                 "name": "NHLGamesTool",
-                "description": "Gets the current NHL game scores",
-                "parameters": {},
+                "description": "Gets the current NHL game scores. If a game has ended (isGameRunning is equal to false) tell the user the result and the fact that it has ended",
+                "parameters": {
+                    "team": {
+                        "type": "string",
+                        "description": "The team the user wants to get the scores for. Don't include the city, just the team name",
+                    }
+                },
+                "required": ["team"],
             },
         }
 
     def run_tool(**kwargs):
-        current_game_data = []
         response = requests.get("https://api-web.nhle.com/v1/score/now")
 
         if not response.ok:
@@ -37,16 +42,40 @@ class NHLGamesTool(BaseTool):
                 else:
                     away_goals += 1
 
-            current_game_data.append(
-                {
-                    "home": game["homeTeam"]["name"]["default"],
-                    "away": game["awayTeam"]["name"]["default"],
-                    "period": game["period"],
-                    "timeRemaining": game["clock"]["timeRemaining"],
-                    "running": game["clock"]["running"],
-                    "homeGoals": home_goals,
-                    "awayGoals": away_goals,
-                }
-            )
+            if (
+                game["homeTeam"]["name"]["default"] == kwargs["team"]
+                or game["awayTeam"]["name"]["default"] == kwargs["team"]
+            ):
 
-        return json.dumps({"result": json.dumps(current_game_data)})
+                if game["clock"]["running"]:
+                    return json.dumps(
+                        {
+                            "result": json.dumps(
+                                {
+                                    "home": game["homeTeam"]["name"]["default"],
+                                    "away": game["awayTeam"]["name"]["default"],
+                                    "period": game["period"],
+                                    "isGameRunning": True,
+                                    "timeRemaining": game["clock"]["timeRemaining"],
+                                    "homeGoals": home_goals,
+                                    "awayGoals": away_goals,
+                                }
+                            )
+                        }
+                    )
+                else:
+                    return json.dumps(
+                        {
+                            "result": json.dumps(
+                                {
+                                    "home": game["homeTeam"]["name"]["default"],
+                                    "away": game["awayTeam"]["name"]["default"],
+                                    "isGameRunning": False,
+                                    "homeGoals": home_goals,
+                                    "awayGoals": away_goals,
+                                }
+                            )
+                        }
+                    )
+
+        return json.dumps({"result": "The team is not playing tonight"})

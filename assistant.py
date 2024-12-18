@@ -53,9 +53,7 @@ def send_message(
             function_to_call = available_functions[function_name].run_tool
             function_args = json.loads(tool_call.function.arguments)
 
-            function_response = function_to_call(
-                expression=function_args.get("expression")
-            )
+            function_response = function_to_call(**function_args)
 
             message_history.append(
                 {

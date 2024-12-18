@@ -46,7 +46,7 @@ class NHLGamesTool(BaseTool):
                 "awayTeam"
             ]["name"]["default"] == kwargs.get("team", ""):
 
-                if game["clock"]["running"]:
+                if game["gameState"] == "LIVE":
                     return json.dumps(
                         {
                             "result": json.dumps(
@@ -54,7 +54,7 @@ class NHLGamesTool(BaseTool):
                                     "home": game["homeTeam"]["name"]["default"],
                                     "away": game["awayTeam"]["name"]["default"],
                                     "period": game["period"],
-                                    "isGameRunning": True,
+                                    "running": True,
                                     "timeRemaining": game["clock"]["timeRemaining"],
                                     "homeGoals": home_goals,
                                     "awayGoals": away_goals,
@@ -69,7 +69,7 @@ class NHLGamesTool(BaseTool):
                                 {
                                     "home": game["homeTeam"]["name"]["default"],
                                     "away": game["awayTeam"]["name"]["default"],
-                                    "isGameRunning": False,
+                                    "running": False,
                                     "homeGoals": home_goals,
                                     "awayGoals": away_goals,
                                 }
@@ -77,7 +77,7 @@ class NHLGamesTool(BaseTool):
                         }
                     )
             else:
-                if game["clock"]["running"]:
+                if game["gameState"] == "LIVE":
                     current_games.append(
                         json.dumps(
                             {
@@ -86,7 +86,7 @@ class NHLGamesTool(BaseTool):
                                         "home": game["homeTeam"]["name"]["default"],
                                         "away": game["awayTeam"]["name"]["default"],
                                         "period": game["period"],
-                                        "isGameRunning": True,
+                                        "running": True,
                                         "timeRemaining": game["clock"]["timeRemaining"],
                                         "homeGoals": home_goals,
                                         "awayGoals": away_goals,
@@ -103,7 +103,7 @@ class NHLGamesTool(BaseTool):
                                     {
                                         "home": game["homeTeam"]["name"]["default"],
                                         "away": game["awayTeam"]["name"]["default"],
-                                        "isGameRunning": False,
+                                        "running": False,
                                         "homeGoals": home_goals,
                                         "awayGoals": away_goals,
                                     }

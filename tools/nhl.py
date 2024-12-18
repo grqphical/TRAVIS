@@ -11,7 +11,7 @@ class NHLGamesTool(BaseTool):
             "type": "function",
             "function": {
                 "name": "NHLGamesTool",
-                "description": "Gets the current NHL game scores. If no team is provided the function returns all NHL games that are happening/happened today. Make sure to include whether or not the game has ended!",
+                "description": "Gets the current NHL game scores. If no team is provided the function returns all NHL games that are happening/happened today. Do not ask the user if they want anymore information that you do not have. You only have the current scores nothing else about the NHL",
                 "parameters": {
                     "team": {
                         "type": "string",
